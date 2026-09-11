@@ -42,7 +42,15 @@ def sync():
     )
     logger.info("Selected TimeTree calendar")
 
-    raw_events = client.get_events(calendar)
+    labels = calendar.get_labels()
+denfuku_label_ids = {
+    label_id for label_id, label in labels.items()
+    if label.get("name") == "傳福"
+}
+raw_events = [
+    event for event in client.get_events(calendar)
+    if event.get("label_id") in denfuku_label_ids
+]
     events = [Event.from_timetree(raw) for raw in raw_events]
     timetree_ids = {event.id for event in events}
 
