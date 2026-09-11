@@ -42,14 +42,19 @@ def sync():
     )
     logger.info("Selected TimeTree calendar")
 
-    labels = calendar.get_labels()
-    denfuku_label_ids = {
-        label_id for label_id, label in labels.items()
-        if label.get("name") == "傳福"
+        denfuku_author_ids = {
+        user_id
+        for user in calendar.metadata.get("calendar_users", [])
+        if "傳福" in str(user.get("name", ""))
+        for user_id in (user.get("id"), user.get("user_id"))
+        if user_id is not None
     }
+    if not denfuku_author_ids:
+        raise RuntimeError("TimeTree member '傳福' was not found; sync stopped safely.")
+
     raw_events = [
         event for event in client.get_events(calendar)
-        if event.get("label_id") in denfuku_label_ids
+        if event.get("author_id") in denfuku_author_ids
     ]
     events = [Event.from_timetree(raw) for raw in raw_events]
     timetree_ids = {event.id for event in events}
