@@ -42,7 +42,7 @@ def sync():
     )
     logger.info("Selected TimeTree calendar")
 
-        labels = calendar.get_labels()
+    labels = calendar.get_labels()
     denfuku_label_ids = {
         label_id for label_id, label in labels.items()
         if label.get("name") == "傳福"
