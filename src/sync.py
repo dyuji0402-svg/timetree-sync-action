@@ -52,10 +52,13 @@ def sync():
     if not denfuku_author_ids:
         raise RuntimeError("TimeTree member '傳福' was not found; sync stopped safely.")
 
-    raw_events = [
+        raw_events = [
         event for event in client.get_events(calendar)
-        if event.get("author_id") in denfuku_author_ids
-    ]
+        if (
+            event.get("author_id") in denfuku_author_ids
+            or bool(set(event.get("attendees") or []) & denfuku_author_ids)
+        )
+        ]
     events = [Event.from_timetree(raw) for raw in raw_events]
     timetree_ids = {event.id for event in events}
 
