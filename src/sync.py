@@ -42,7 +42,7 @@ def sync():
     )
     logger.info("Selected TimeTree calendar")
 
-denfuku_author_ids = {
+    denfuku_author_ids = {
         user_id
         for user in calendar.metadata.get("calendar_users", [])
         if "傳福" in str(user.get("name", ""))
